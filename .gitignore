@@ -1,4 +1,5 @@
 
 src/GradeBook/obj/**
 src/GradeBook/bin/**
+test/GradeBook.Tests/obj/**
 .vscode/**
