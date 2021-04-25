@@ -50,7 +50,7 @@ namespace GradeBook
             return average;
         }
 
-        private Statistics ComputeStatistics()
+        public Statistics ComputeStatistics()
         {
             var Stats = new Statistics();
             Stats.HighGrade = double.MinValue;
