@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GradeBook
 {
-    class Book
+    public class Book
     {
         // Constructor
         public Book(string name)
@@ -17,56 +17,68 @@ namespace GradeBook
             grades.Add(grade);
         }
 
-        public void FindHighGrade()
+        public double FindHighGrade()
         {
+            var highGrade = double.MinValue;
             foreach(var number in grades)
             {
                 highGrade = Math.Max(number, highGrade);
             }
+            return highGrade;
         }
 
-        public void FindLowGrade()
+        public double FindLowGrade()
         {
+            var lowGrade = double.MaxValue;
             foreach(var number in grades)
             {
                 lowGrade = Math.Min(number, lowGrade);
             }
+            return lowGrade;
         }
 
-        public void FindAverageGrade()
+        public double FindAverageGrade()
         {
+            var average = 0.0;
             var result = 0.0;
             foreach(var number in grades)
             {
                 result += number;
             }
             average = result/grades.Count;
+
+            return average;
         }
 
-        private void ComputeStatistics()
+        private Statistics ComputeStatistics()
         {
-            FindHighGrade();
-            FindLowGrade();
-            FindAverageGrade();
+            var Stats = new Statistics();
+            Stats.HighGrade = double.MinValue;
+            Stats.LowGrade = double.MaxValue;
+            Stats.Average = 0.0;
+
+
+            Stats.HighGrade = FindHighGrade();
+            Stats.LowGrade = FindLowGrade();
+            Stats.Average = FindAverageGrade();
+
+            return Stats;
         }
 
         public void ShowStatistics()
         {   
             // Run the calculations
-            ComputeStatistics();
+            var result = ComputeStatistics();
 
             // Write the highest grade to the console
-            System.Console.WriteLine($"The highest score is: {highGrade:N1}");
+            System.Console.WriteLine($"The highest score is: {result.HighGrade:N1}");
             // Write the lowest grade to the console
-            System.Console.WriteLine($"The lowest score is: {lowGrade:N1}");
+            System.Console.WriteLine($"The lowest score is: {result.LowGrade:N1}");
             // Write the average to the console
-            System.Console.WriteLine($"The average score is: {average:N1}");
+            System.Console.WriteLine($"The average score is: {result.Average:N1}");
         }
 
         private List<double> grades;
         private string name;
-        private double average = 0.0;
-        private double highGrade = double.MinValue;
-        private double lowGrade = double.MaxValue;
     }
 }
