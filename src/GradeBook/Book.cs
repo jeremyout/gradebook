@@ -12,9 +12,39 @@ namespace GradeBook
             Name = name;
         }
 
+        public void AddLetterGrade(char letter)
+        {
+            switch(letter)
+            {
+                case 'A':
+                    AddGrade(90.0);
+                    break;
+                case 'B':
+                    AddGrade(80.0);
+                    break;
+                case 'C':
+                    AddGrade(70.0);
+                    break;
+                case 'D':
+                    AddGrade(60.0);
+                    break;
+                default:
+                    AddGrade(0.0);
+                    break;
+            }
+        }
+
         public void AddGrade(double grade)
         {
-            grades.Add(grade);
+            if (grade >= 0 
+                && grade <= 100)
+            {
+                grades.Add(grade);
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid {nameof(grade)}");
+            }
         }
 
         public double FindHighGrade()
@@ -50,17 +80,47 @@ namespace GradeBook
             return average;
         }
 
+        public char FindLetterGrade()
+        {
+            var letterGrade = 'F';
+            var gradeStats = new Statistics();
+            gradeStats.Average = FindAverageGrade();
+
+            switch(gradeStats.Average)
+            {
+                case var d when d >= 90.0:
+                    letterGrade = 'A';
+                    break;
+                case var d when d >= 80.0:
+                    letterGrade = 'B';
+                    break;
+                case var d when d >= 70.0:
+                    letterGrade = 'C';
+                    break;
+                case var d when d >= 60.0:
+                    letterGrade = 'D';
+                    break;
+                default:
+                    letterGrade = 'F';
+                    break;
+            }
+
+            return letterGrade;
+        }
+
         public Statistics ComputeStatistics()
         {
             var Stats = new Statistics();
             Stats.HighGrade = double.MinValue;
             Stats.LowGrade = double.MaxValue;
             Stats.Average = 0.0;
+            Stats.Letter = 'F';
 
 
             Stats.HighGrade = FindHighGrade();
             Stats.LowGrade = FindLowGrade();
             Stats.Average = FindAverageGrade();
+            Stats.Letter = FindLetterGrade();
 
             return Stats;
         }
@@ -76,6 +136,8 @@ namespace GradeBook
             System.Console.WriteLine($"The lowest score is: {result.LowGrade:N1}");
             // Write the average to the console
             System.Console.WriteLine($"The average score is: {result.Average:N1}");
+            // Write the average letter grade to the console
+            System.Console.WriteLine($"The average letter grade is is: {result.Letter}");
         }
 
         private List<double> grades;
