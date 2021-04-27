@@ -41,6 +41,7 @@ namespace GradeBook
 
             }
             book.ShowStatistics();
+            Console.WriteLine(Book.CATEGORY);
         }
     }
 }

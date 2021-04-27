@@ -149,6 +149,7 @@ namespace GradeBook
             private set;
         }
 
-        readonly string category;
+        readonly string category = "Science";
+        public const string CATEGORY = "Math";
     }
 }
