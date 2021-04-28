@@ -13,7 +13,7 @@ namespace GradeBook.Tests
         {
             WriteLogDelegate log;
             
-            log = new WriteLogDelegate(ReturnMessage);
+            log = ReturnMessage;
 
             var result = log("Hello");
             Assert.Equal("Hello", result);
