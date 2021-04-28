@@ -8,6 +8,10 @@ namespace GradeBook
         static void Main(string[] args)
         {
             var book = new Book("Jeremy's Grade Book");
+            book.GradeAdded += OnGradeAdded;
+            book.GradeAdded += OnGradeAdded;
+            book.GradeAdded -= OnGradeAdded;
+            book.GradeAdded += OnGradeAdded;
             var grade = 0.0;
             var done = false;
             while (!done)
@@ -42,6 +46,11 @@ namespace GradeBook
             }
             book.ShowStatistics();
             Console.WriteLine(Book.CATEGORY);
+        }
+
+        static void OnGradeAdded(object sender, EventArgs e)
+        {
+            Console.WriteLine("A grade was added");
         }
     }
 }
