@@ -15,7 +15,7 @@ namespace GradeBook
             // Console.WriteLine(Book.CATEGORY);
         }
 
-        private static void EnterGrades(Book book)
+        private static void EnterGrades(IBook book)
         {
             var grade = 0.0;
             var done = false;

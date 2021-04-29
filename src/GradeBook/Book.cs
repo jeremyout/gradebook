@@ -19,13 +19,28 @@ namespace GradeBook
         }
     }
 
-    public abstract class Book : NamedObject
+    public interface IBook
+    {
+        void AddGrade(double grade);
+        Statistics ComputeStatistics();
+        string Name { get; }
+        event GradeAddedDelegate GradeAdded;
+    }
+
+    public abstract class Book : NamedObject, IBook
     {
         protected Book(string name) : base(name)
         {
         }
 
+        public virtual event GradeAddedDelegate GradeAdded;
+
         public abstract void AddGrade(double grade);
+
+        public virtual Statistics ComputeStatistics()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class InMemoryBook : Book
@@ -78,7 +93,7 @@ namespace GradeBook
             }
         }
 
-        public event GradeAddedDelegate GradeAdded;
+        public override event GradeAddedDelegate GradeAdded;
 
         public double FindHighGrade()
         {
@@ -141,7 +156,7 @@ namespace GradeBook
             return letterGrade;
         }
 
-        public Statistics ComputeStatistics()
+        public override Statistics ComputeStatistics()
         {
             var Stats = new Statistics();
             Stats.HighGrade = double.MinValue;
