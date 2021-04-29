@@ -4,12 +4,36 @@ using System.Collections.Generic;
 namespace GradeBook
 {
     public delegate void GradeAddedDelegate(object sender, EventArgs args);
-    public class Book
+
+    public class NamedObject
+    {
+        public NamedObject(string name)
+        {
+            Name = name;
+        }
+
+        public string Name
+        {
+            get;
+            set;
+        }
+    }
+
+    public abstract class Book : NamedObject
+    {
+        protected Book(string name) : base(name)
+        {
+        }
+
+        public abstract void AddGrade(double grade);
+    }
+
+    public class InMemoryBook : Book
     {
         // Constructor
-        public Book(string name)
+        public InMemoryBook(string name) : base(name)
         {
-            category = "";
+            // category = "";
             grades = new List<double>();
             Name = name;
         }
@@ -36,7 +60,7 @@ namespace GradeBook
             }
         }
 
-        public void AddGrade(double grade)
+        public override void AddGrade(double grade)
         {
             if (grade >= 0 
                 && grade <= 100)
@@ -150,14 +174,8 @@ namespace GradeBook
         }
 
         private List<double> grades;
-        
-        public string Name
-        {
-            get;
-            set;
-        }
 
-        readonly string category = "Science";
-        public const string CATEGORY = "Math";
+        // readonly string category = "Science";
+        // public const string CATEGORY = "Math";
     }
 }

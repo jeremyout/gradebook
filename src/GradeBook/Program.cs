@@ -7,11 +7,16 @@ namespace GradeBook
     {
         static void Main(string[] args)
         {
-            var book = new Book("Jeremy's Grade Book");
+            var book = new InMemoryBook("Jeremy's Grade Book");
             book.GradeAdded += OnGradeAdded;
-            book.GradeAdded += OnGradeAdded;
-            book.GradeAdded -= OnGradeAdded;
-            book.GradeAdded += OnGradeAdded;
+
+            EnterGrades(book);
+            book.ShowStatistics();
+            // Console.WriteLine(Book.CATEGORY);
+        }
+
+        private static void EnterGrades(Book book)
+        {
             var grade = 0.0;
             var done = false;
             while (!done)
@@ -29,11 +34,11 @@ namespace GradeBook
                         grade = double.Parse(input);
                         book.AddGrade(grade);
                     }
-                    catch(ArgumentException ex)
+                    catch (ArgumentException ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
-                    catch(FormatException ex)
+                    catch (FormatException ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
@@ -44,8 +49,6 @@ namespace GradeBook
                 }
 
             }
-            book.ShowStatistics();
-            Console.WriteLine(Book.CATEGORY);
         }
 
         static void OnGradeAdded(object sender, EventArgs e)
