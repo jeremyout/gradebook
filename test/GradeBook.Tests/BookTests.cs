@@ -15,7 +15,7 @@ namespace GradeBook.Tests
             book.AddGrade(77.3);
 
             // act
-            var result = book.ComputeStatistics();
+            var result = book.GetStatistics();
             
             // assert
             Assert.Equal(85.6, result.Average, 1);

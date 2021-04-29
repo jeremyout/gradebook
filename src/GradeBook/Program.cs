@@ -7,12 +7,12 @@ namespace GradeBook
     {
         static void Main(string[] args)
         {
-            var book = new InMemoryBook("Jeremy's Grade Book");
+            IBook book = new DiskBook("Jeremy's Grade Book");
             book.GradeAdded += OnGradeAdded;
 
             EnterGrades(book);
             // Run the calculations
-            var result = book.ComputeStatistics();
+            var result = book.GetStatistics();
             // Console.WriteLine(Book.CATEGORY);
 
             // Write the highest grade to the console

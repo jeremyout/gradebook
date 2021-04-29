@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GradeBook
 {
@@ -22,7 +23,7 @@ namespace GradeBook
     public interface IBook
     {
         void AddGrade(double grade);
-        Statistics ComputeStatistics();
+        Statistics GetStatistics();
         string Name { get; }
         event GradeAddedDelegate GradeAdded;
     }
@@ -33,13 +34,48 @@ namespace GradeBook
         {
         }
 
-        public virtual event GradeAddedDelegate GradeAdded;
-
+        public abstract event GradeAddedDelegate GradeAdded;
         public abstract void AddGrade(double grade);
+        public abstract Statistics GetStatistics();
+    }
 
-        public virtual Statistics ComputeStatistics()
+    public class DiskBook : Book
+    {
+        public DiskBook(string name) : base(name)
         {
-            throw new NotImplementedException();
+
+        }
+
+        public override event GradeAddedDelegate GradeAdded;
+
+        public override void AddGrade(double grade)
+        {
+            using (var writer = File.AppendText($"{Name}.txt"))
+            {
+                writer.WriteLine(grade);
+                if (GradeAdded != null)
+                {
+                    GradeAdded(this, new EventArgs());
+                }
+            }
+        }
+
+        public override Statistics GetStatistics()
+        {
+            var result = new Statistics();
+
+            using (var reader = File.OpenText($"{Name}.txt"))
+            {
+                var line = reader.ReadLine();
+                while(line != null)
+                {
+                    var number = double.Parse(line);
+                    result.Add(number);
+                    line = reader.ReadLine();
+                }
+            }
+
+            return result;
         }
     }
 
@@ -55,7 +91,7 @@ namespace GradeBook
 
         public void AddGrade(char letter)
         {
-            switch(letter)
+            switch (letter)
             {
                 case 'A':
                     AddGrade(90.0);
@@ -77,7 +113,7 @@ namespace GradeBook
 
         public override void AddGrade(double grade)
         {
-            if (grade >= 0 
+            if (grade >= 0
                 && grade <= 100)
             {
                 grades.Add(grade);
@@ -95,82 +131,16 @@ namespace GradeBook
 
         public override event GradeAddedDelegate GradeAdded;
 
-        public double FindHighGrade()
+        public override Statistics GetStatistics()
         {
-            var highGrade = double.MinValue;
-            foreach(var number in grades)
+            var result = new Statistics();
+
+            for (var index = 0; index < grades.Count; index++)
             {
-                highGrade = Math.Max(number, highGrade);
-            }
-            return highGrade;
-        }
-
-        public double FindLowGrade()
-        {
-            var lowGrade = double.MaxValue;
-            foreach(var number in grades)
-            {
-                lowGrade = Math.Min(number, lowGrade);
-            }
-            return lowGrade;
-        }
-
-        public double FindAverageGrade()
-        {
-            var average = 0.0;
-            var result = 0.0;
-            foreach(var number in grades)
-            {
-                result += number;
-            }
-            average = result/grades.Count;
-
-            return average;
-        }
-
-        public char FindLetterGrade()
-        {
-            var letterGrade = 'F';
-            var gradeStats = new Statistics();
-            gradeStats.Average = FindAverageGrade();
-
-            switch(gradeStats.Average)
-            {
-                case var d when d >= 90.0:
-                    letterGrade = 'A';
-                    break;
-                case var d when d >= 80.0:
-                    letterGrade = 'B';
-                    break;
-                case var d when d >= 70.0:
-                    letterGrade = 'C';
-                    break;
-                case var d when d >= 60.0:
-                    letterGrade = 'D';
-                    break;
-                default:
-                    letterGrade = 'F';
-                    break;
+                result.Add(grades[index]);
             }
 
-            return letterGrade;
-        }
-
-        public override Statistics ComputeStatistics()
-        {
-            var Stats = new Statistics();
-            Stats.HighGrade = double.MinValue;
-            Stats.LowGrade = double.MaxValue;
-            Stats.Average = 0.0;
-            Stats.Letter = 'F';
-
-
-            Stats.HighGrade = FindHighGrade();
-            Stats.LowGrade = FindLowGrade();
-            Stats.Average = FindAverageGrade();
-            Stats.Letter = FindLetterGrade();
-
-            return Stats;
+            return result;
         }
 
         private List<double> grades;
